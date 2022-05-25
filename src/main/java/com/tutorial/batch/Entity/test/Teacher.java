@@ -1,4 +1,4 @@
-package com.tutorial.batch.Entity;
+package com.tutorial.batch.Entity.test;
 
 import lombok.*;
 import javax.persistence.*;

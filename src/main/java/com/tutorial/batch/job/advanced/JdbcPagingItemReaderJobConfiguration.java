@@ -1,6 +1,6 @@
-package com.tutorial.batch.job;
+package com.tutorial.batch.job.advanced;
 
-import com.tutorial.batch.Entity.Pay;
+import com.tutorial.batch.Entity.test.Pay;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;

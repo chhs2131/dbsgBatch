@@ -1,13 +1,12 @@
-package com.tutorial.batch.job;
+package com.tutorial.batch.job.advanced;
 
-import com.tutorial.batch.Entity.Pay;
+import com.tutorial.batch.Entity.test.Pay;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;

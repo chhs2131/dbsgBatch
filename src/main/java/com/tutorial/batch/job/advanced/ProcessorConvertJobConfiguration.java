@@ -1,6 +1,6 @@
-package com.tutorial.batch.job;
+package com.tutorial.batch.job.advanced;
 
-import com.tutorial.batch.Entity.Teacher;
+import com.tutorial.batch.Entity.test.Teacher;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -10,27 +10,20 @@ import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.batch.item.database.JpaPagingItemReader;
-import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
 import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
-import org.springframework.batch.item.support.CompositeItemProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 
 import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
 @Configuration
-public class ProcessorCompositeJobConfiguration {
+public class ProcessorConvertJobConfiguration {
 
-    public static final String JOB_NAME = "processorCompositeBatch";
+    public static final String JOB_NAME = "ProcessorConvertBatch";
     public static final String BEAN_PREFIX = JOB_NAME + "_";
 
     private final JobBuilderFactory jobBuilderFactory;
@@ -54,40 +47,27 @@ public class ProcessorCompositeJobConfiguration {
         return stepBuilderFactory.get(BEAN_PREFIX + "step")
                 .<Teacher, String>chunk(chunkSize)
                 .reader(reader())
-                .processor(compositeProcessor())
+                .processor(processor())
                 .writer(writer())
                 .build();
     }
 
-    @Bean(BEAN_PREFIX + "reader")
+    @Bean
     public JpaPagingItemReader<Teacher> reader() {
         return new JpaPagingItemReaderBuilder<Teacher>()
                 .name(BEAN_PREFIX+"reader")
                 .entityManagerFactory(emf)
                 .pageSize(chunkSize)
+                //.queryString("SELECT name FROM teacher")
                 .queryString("SELECT t FROM Teacher t")
                 .build();
     }
 
     @Bean
-    public CompositeItemProcessor compositeProcessor() {
-        List<ItemProcessor> delegates = new ArrayList<>(2);
-        delegates.add(processor1());
-        delegates.add(processor2());
-
-        CompositeItemProcessor processor = new CompositeItemProcessor<>();
-
-        processor.setDelegates(delegates);
-
-        return processor;
-    }
-
-    public ItemProcessor<Teacher, String> processor1() {
-        return Teacher::getName;
-    }
-
-    public ItemProcessor<String, String> processor2() {
-        return name -> "안녕하세요. "+ name + "입니다.";
+    public ItemProcessor<Teacher, String> processor() {
+        return teacher -> {
+            return teacher.getName();
+        };
     }
 
     private ItemWriter<String> writer() {

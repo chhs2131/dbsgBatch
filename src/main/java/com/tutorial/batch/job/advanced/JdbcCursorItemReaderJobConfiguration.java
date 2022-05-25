@@ -1,5 +1,6 @@
-package com.tutorial.batch.job;
+package com.tutorial.batch.job.advanced;
 
+import com.tutorial.batch.Entity.test.Pay;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -40,26 +41,26 @@ public class JdbcCursorItemReaderJobConfiguration {
     @Bean
     public Step jdbcCursorItemReaderStep() {
         return stepBuilderFactory.get("jdbcCursorItemReaderStep")
-                .<com.tutorial.batch.Entity.Pay, com.tutorial.batch.Entity.Pay>chunk(chunkSize)
+                .<Pay, Pay>chunk(chunkSize)
                 .reader(jdbcCursorItemReader())
                 .writer(jdbcCursorItemWriter())
                 .build();
     }
 
     @Bean
-    public JdbcCursorItemReader<com.tutorial.batch.Entity.Pay> jdbcCursorItemReader() {
-        return new JdbcCursorItemReaderBuilder<com.tutorial.batch.Entity.Pay>()
+    public JdbcCursorItemReader<Pay> jdbcCursorItemReader() {
+        return new JdbcCursorItemReaderBuilder<Pay>()
                 .fetchSize(chunkSize)
                 .dataSource(dataSource)
-                .rowMapper(new BeanPropertyRowMapper<>(com.tutorial.batch.Entity.Pay.class))
+                .rowMapper(new BeanPropertyRowMapper<>(Pay.class))
                 .sql("SELECT id, amount, tx_name, tx_date_time FROM pay")
                 .name("jdbcCursorItemReader")
                 .build();
     }
 
-    private ItemWriter<com.tutorial.batch.Entity.Pay> jdbcCursorItemWriter() {
+    private ItemWriter<Pay> jdbcCursorItemWriter() {
         return list -> {
-            for (com.tutorial.batch.Entity.Pay pay: list) {
+            for (Pay pay: list) {
                 log.info("Current Pay={}", pay);
             }
         };
