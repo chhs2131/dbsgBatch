@@ -38,3 +38,4 @@ out/
 
 ### 개인파일 ###
 *.yml
+application.yml
